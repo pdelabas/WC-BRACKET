@@ -4,114 +4,120 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>2026 World Cup Bracket Predictor</title>
-    <!-- Tailwind CSS for modern, clean styling -->
+    <!-- Tailwind CSS Engine -->
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <style>
-        .match-card {
-            transition: all 0.2s ease;
+        .bracket-column {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+            min-width: 220px;
         }
         .team-row.selected {
-            background-color: #15803d !important;
-            color: white;
-            font-weight: bold;
+            background-color: #16a34a !important;
+            color: #ffffff !important;
+            font-weight: 700;
         }
     </style>
 </head>
-<body class="bg-gray-900 text-gray-100 min-h-screen font-sans">
+<body class="bg-gray-950 text-gray-100 min-h-screen font-sans antialiased">
 
-    <header class="bg-gray-800 border-b border-gray-700 py-6 px-4 text-center">
-        <h1 class="text-3xl font-extrabold text-emerald-400 tracking-wide uppercase">🏆 2026 World Cup Bracket Predictor 🏆</h1>
-        <p class="text-gray-400 mt-2 text-sm md:text-base">Click your winning teams to advance them to the next round all the way to the Final!</p>
+    <header class="bg-gray-900 border-b border-gray-800 py-6 px-4 text-center">
+        <h1 class="text-3xl font-extrabold text-emerald-400 tracking-wider uppercase">🏆 2026 Knockout Bracket Creator 🏆</h1>
+        <p class="text-gray-400 mt-2 text-sm">Lock in your selections round-by-round to generate your prediction profile data!</p>
     </header>
 
-    <main class="max-w-4xl mx-auto p-4 md:p-8 space-y-12">
+    <main class="p-4 space-y-8">
         
-        <!-- User Identity Section -->
-        <div class="bg-gray-800 p-4 rounded-xl border border-gray-700 shadow-md">
-            <label for="participant-name" class="block text-sm font-medium text-gray-300 mb-2">Your Name / Nickname:</label>
-            <input type="text" id="participant-name" placeholder="e.g., Oliver" class="w-full bg-gray-900 border border-gray-600 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-emerald-500">
+        <!-- Profile Identity Metadata -->
+        <div class="max-w-md mx-auto bg-gray-900 p-5 rounded-xl border border-gray-800 shadow-xl">
+            <label for="participant-name" class="block text-xs uppercase font-bold tracking-wider text-gray-400 mb-2">Your Name / Entry Handle:</label>
+            <input type="text" id="participant-name" placeholder="e.g., Oliver" class="w-full bg-gray-950 border border-gray-700 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-emerald-500 font-semibold">
         </div>
 
-        <!-- ROUND OF 32 -->
-        <section>
-            <h2 class="text-xl font-bold text-emerald-400 mb-4 border-b border-gray-700 pb-2">1. Round of 32</h2>
-            <div id="r32-container" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <!-- Match cards injected via JS -->
-            </div>
-        </section>
+        <!-- Scrollable Bracket Tree Viewport -->
+        <div class="overflow-x-auto pb-6">
+            <div class="flex gap-8 justify-between items-stretch min-w-[1200px] px-4">
+                
+                <!-- 1. ROUND OF 32 COLUMN -->
+                <div class="bracket-column space-y-3">
+                    <h3 class="text-center font-black tracking-widest text-xs uppercase bg-gray-900 py-2 border border-gray-800 text-emerald-400 rounded">Round of 32</h3>
+                    <div id="col-r32" class="space-y-4 flex flex-col justify-between h-full"></div>
+                </div>
 
-        <!-- ROUND OF 16 -->
-        <section>
-            <h2 class="text-xl font-bold text-emerald-400 mb-4 border-b border-gray-700 pb-2">2. Round of 16</h2>
-            <div id="r16-container" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <!-- Dynamic cards -->
-            </div>
-        </section>
+                <!-- 2. ROUND OF 16 COLUMN -->
+                <div class="bracket-column space-y-3">
+                    <h3 class="text-center font-black tracking-widest text-xs uppercase bg-gray-900 py-2 border border-gray-800 text-emerald-400 rounded">Round of 16</h3>
+                    <div id="col-r16" class="space-y-8 flex flex-col justify-around h-full"></div>
+                </div>
 
-        <!-- QUARTERFINALS -->
-        <section>
-            <h2 class="text-xl font-bold text-emerald-400 mb-4 border-b border-gray-700 pb-2">3. Quarterfinals</h2>
-            <div id="qf-container" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <!-- Dynamic cards -->
-            </div>
-        </section>
+                <!-- 3. QUARTERFINALS COLUMN -->
+                <div class="bracket-column space-y-3">
+                    <h3 class="text-center font-black tracking-widest text-xs uppercase bg-gray-900 py-2 border border-gray-800 text-emerald-400 rounded">Quarterfinals</h3>
+                    <div id="col-qf" class="space-y-16 flex flex-col justify-around h-full"></div>
+                </div>
 
-        <!-- SEMIFINALS -->
-        <section>
-            <h2 class="text-xl font-bold text-emerald-400 mb-4 border-b border-gray-700 pb-2">4. Semifinals</h2>
-            <div id="sf-container" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <!-- Dynamic cards -->
-            </div>
-        </section>
+                <!-- 4. SEMIFINALS COLUMN -->
+                <div class="bracket-column space-y-3">
+                    <h3 class="text-center font-black tracking-widest text-xs uppercase bg-gray-900 py-2 border border-gray-800 text-emerald-400 rounded">Semifinals</h3>
+                    <div id="col-sf" class="space-y-24 flex flex-col justify-around h-full"></div>
+                </div>
 
-        <!-- THE FINAL -->
-        <section class="bg-gradient-to-r from-emerald-900 to-teal-900 p-6 rounded-2xl border-2 border-emerald-500 text-center space-y-4">
-            <h2 class="text-2xl font-extrabold text-yellow-400 uppercase tracking-widest">🏆 The Grand Final 🏆</h2>
-            <div id="final-container" class="max-w-md mx-auto bg-gray-800 rounded-xl overflow-hidden border border-gray-600 p-4">
-                <!-- Final Card -->
-            </div>
-            <div class="pt-4">
-                <p class="text-sm uppercase tracking-wider text-gray-300">Your Predicted World Cup Champion:</p>
-                <div id="champion-display" class="text-3xl font-black text-yellow-300 mt-2 animate-pulse">—</div>
-            </div>
-        </section>
+                <!-- 5. GRAND FINAL CHAMPIONSHIP STAGE -->
+                <div class="bracket-column space-y-3 max-w-xs justify-center">
+                    <h3 class="text-center font-black tracking-widest text-xs uppercase bg-gradient-to-r from-amber-500 to-yellow-500 py-2 text-gray-950 rounded">World Cup Final</h3>
+                    <div id="col-final" class="py-4"></div>
+                    <div class="bg-gray-900 border-2 border-amber-500/40 p-4 rounded-xl text-center space-y-2 shadow-2xl">
+                        <span class="text-[10px] uppercase tracking-widest font-black text-amber-400 block">Predicted Champion</span>
+                        <div id="champ-crown" class="text-xl font-black text-yellow-300 tracking-wide">—</div>
+                    </div>
+                </div>
 
-        <!-- SUBMIT / COPY DATA SECTION -->
-        <section class="text-center bg-gray-800 p-6 rounded-xl border border-gray-700 space-y-4">
-            <button id="generate-btn" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-8 py-3 rounded-lg shadow-lg transform active:scale-95 transition-all text-lg cursor-pointer">
-                📋 Generate Selection Data
-            </button>
-            <div id="output-box" class="hidden space-y-2">
-                <p class="text-xs text-gray-400">Copy the text area below and paste it back into our chat!</p>
-                <textarea id="output-json" readonly class="w-full h-32 bg-gray-950 border border-gray-700 rounded-lg p-2 font-mono text-xs text-emerald-400 focus:outline-none"></textarea>
+            </div>
+        </div>
+
+        <!-- INTERACTIVE SUBMISSION PANEL -->
+        <section class="max-w-xl mx-auto bg-gray-900 p-6 rounded-xl border border-gray-800 text-center space-y-4 shadow-2xl">
+            <h4 class="text-sm font-bold uppercase tracking-wider text-gray-300">Submit Your Bracket Bracket Selections</h4>
+            
+            <div class="flex flex-col sm:flex-row gap-3 justify-center">
+                <button id="generate-btn" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-6 py-3 rounded-lg shadow transition-all cursor-pointer text-sm uppercase tracking-wider">
+                    📋 Copy Selection Data
+                </button>
+                <a id="email-btn" href="#" class="bg-blue-600 hover:bg-blue-500 text-white font-bold px-6 py-3 rounded-lg shadow transition-all flex items-center justify-center text-sm uppercase tracking-wider">
+                    ✉️ Share via Email
+                </a>
+            </div>
+
+            <div id="output-box" class="hidden space-y-2 pt-2">
+                <p class="text-[11px] text-gray-400">Data automatically saved to clipboard! If pasting fails, manual fallback copy window is opened below:</p>
+                <textarea id="output-json" readonly class="w-full h-36 bg-gray-950 border border-gray-800 rounded-lg p-2.5 font-mono text-xs text-emerald-400 focus:outline-none"></textarea>
             </div>
         </section>
     </main>
 
     <script>
-        // The real 2026 World Cup Bracket layout pairings
+        // Official Core 2026 Pairing Schedule Grid
         const initialMatchups = [
-            { id: 'm1', t1: 'Germany', t2: 'Paraguay' },
-            { id: 'm2', t1: 'France', t2: 'Sweden' },
-            { id: 'm3', t1: 'South Africa', t2: 'Canada' },
-            { id: 'm4', t1: 'Netherlands', t2: 'Morocco' },
-            { id: 'm5', t1: 'United States', t2: 'Bosnia & Herzegovina' },
-            { id: 'm6', t1: 'Belgium', t2: 'Czechia' },
-            { id: 'm7', t1: 'Colombia', t2: 'Croatia' },
-            { id: 'm8', t1: 'Spain', t2: 'Austria' },
-            { id: 'm9', t1: 'Brazil', t2: 'Japan' },
-            { id: 'm10', t1: 'Ecuador', t2: 'Norway' },
-            { id: 'm11', t1: 'Mexico', t2: 'Scotland' },
-            { id: 'm12', t1: 'England', t2: 'Senegal' },
-            { id: 'm13', t1: 'Argentina', t2: 'Cabo Verde' },
-            { id: 'm14', t1: 'Türkiye', t2: 'Egypt' },
-            { id: 'm15', t1: 'Switzerland', t2: 'Algeria' },
-            { id: 'm16', t1: 'Portugal', t2: 'Ivory Coast' }
+            { id: 'm1', t1: '🇩🇪 Germany', t2: '🇵🇾 Paraguay' },
+            { id: 'm2', t1: '🇫🇷 France', t2: '🇸🇪 Sweden' },
+            { id: 'm3', t1: '🇿🇦 South Africa', t2: '🇨🇦 Canada' },
+            { id: 'm4', t1: '🇳🇱 Netherlands', t2: '🇲🇦 Morocco' },
+            { id: 'm5', t1: '🇺🇸 United States', t2: '🇧🇦 Bosnia & Herz.' },
+            { id: 'm6', t1: '🇧🇪 Belgium', t2: '🇨🇿 Czechia' },
+            { id: 'm7', t1: '🔄 Winner Group K', t2: '🇭🇷 Croatia' },
+            { id: 'm8', t1: '🇪🇸 Spain', t2: '🔄 Runner-up Group J' },
+            { id: 'm9', t1: '🇧🇷 Brazil', t2: '🇯🇵 Japan' },
+            { id: 'm10', t1: '🇪🇨 Ecuador', t2: '🇳🇴 Norway' },
+            { id: 'm11', t1: '🇲🇽 Mexico', t2: '🏴󠁧󠁢󠁳󠁣󠁴󠁿 Scotland' },
+            { id: 'm12', t1: '🏴󠁧󠁢󠁥󠁮󠁧󠁿 England', t2: '🇸🇳 Senegal' },
+            { id: 'm13', t1: '🇦🇷 Argentina', t2: '🇨🇻 Cabo Verde' },
+            { id: 'm14', t1: '🇹🇷 Türkiye', t2: '🇪🇬 Egypt' },
+            { id: 'm15', t1: '🇨🇭 Switzerland', t2: '🔄 3rd Group K/L' },
+            { id: 'm16', t1: '🇵🇹 Portugal', t2: '🇨🇮 Ivory Coast' }
         ];
 
-        // Tree structure map defining where winners advance
         const progressionMap = {
-            // R32 -> R16 pairings
             'm1': { target: 'r16_1', slot: 't1' }, 'm2': { target: 'r16_1', slot: 't2' },
             'm3': { target: 'r16_2', slot: 't1' }, 'm4': { target: 'r16_2', slot: 't2' },
             'm5': { target: 'r16_3', slot: 't1' }, 'm6': { target: 'r16_3', slot: 't2' },
@@ -121,72 +127,65 @@
             'm13': { target: 'r16_7', slot: 't1' }, 'm14': { target: 'r16_7', slot: 't2' },
             'm15': { target: 'r16_8', slot: 't1' }, 'm16': { target: 'r16_8', slot: 't2' },
 
-            // R16 -> QF pairings
             'r16_1': { target: 'qf_1', slot: 't1' }, 'r16_2': { target: 'qf_1', slot: 't2' },
             'r16_3': { target: 'qf_2', slot: 't1' }, 'r16_4': { target: 'qf_2', slot: 't2' },
             'r16_5': { target: 'qf_3', slot: 't1' }, 'r16_6': { target: 'qf_3', slot: 't2' },
             'r16_7': { target: 'qf_4', slot: 't1' }, 'r16_8': { target: 'qf_4', slot: 't2' },
 
-            // QF -> SF pairings
             'qf_1': { target: 'sf_1', slot: 't1' }, 'qf_2': { target: 'sf_1', slot: 't2' },
             'qf_3': { target: 'sf_2', slot: 't1' }, 'qf_4': { target: 'sf_2', slot: 't2' },
 
-            // SF -> Final pairing
             'sf_1': { target: 'final_1', slot: 't1' }, 'sf_2': { target: 'final_1', slot: 't2' }
         };
 
-        // State holder for user picks
-        const bracketState = {
-            r32: {}, r16: {}, qf: {}, sf: {}, final: {}
-        };
+        const bracketState = { r32: {}, r16: {}, qf: {}, sf: {}, final: {} };
 
-        // Setup DOM nodes helper
-        function makeMatchCard(id, label, defaultT1 = '—', defaultT2 = '—', stage) {
+        function makeMatchCardUI(id, t1, t2, label, stage) {
             return `
-                <div class="bg-gray-800 border border-gray-700 rounded-xl overflow-hidden shadow match-card" id="card-${id}">
-                    <div class="bg-gray-700 text-gray-400 text-xs px-3 py-1 font-semibold">${label}</div>
-                    <div class="divide-y divide-gray-700">
-                        <div class="team-row p-3 flex justify-between items-center cursor-pointer hover:bg-gray-700/50" onclick="pickWinner('${id}', 't1', '${stage}')" id="${id}-t1-row">
-                            <span id="${id}-t1-name">${defaultT1}</span>
+                <div class="bg-gray-900 border border-gray-800 rounded-lg overflow-hidden shadow-lg text-xs w-full" id="card-${id}">
+                    <div class="bg-gray-800 border-b border-gray-800 text-gray-400 font-bold px-2 py-1 text-[10px] uppercase tracking-tight">${label}</div>
+                    <div class="divide-y divide-gray-850">
+                        <div class="team-row p-2 flex items-center justify-between cursor-pointer hover:bg-gray-800 select-none transition-all" onclick="pickWinner('${id}', 't1', '${stage}')" id="${id}-t1-row">
+                            <span id="${id}-t1-name" class="font-medium tracking-wide">${t1}</span>
                         </div>
-                        <div class="team-row p-3 flex justify-between items-center cursor-pointer hover:bg-gray-700/50" onclick="pickWinner('${id}', 't2', '${stage}')" id="${id}-t2-row">
-                            <span id="${id}-t2-name">${defaultT2}</span>
+                        <div class="team-row p-2 flex items-center justify-between cursor-pointer hover:bg-gray-800 select-none transition-all" onclick="pickWinner('${id}', 't2', '${stage}')" id="${id}-t2-row">
+                            <span id="${id}-t2-name" class="font-medium tracking-wide">${t2}</span>
                         </div>
                     </div>
                 </div>`;
         }
 
-        // Initialize empty structural rounds
-        function init() {
-            const r32Container = document.getElementById('r32-container');
+        function initTree() {
+            const r32Col = document.getElementById('col-r32');
             initialMatchups.forEach((m, idx) => {
-                r32Container.insertAdjacentHTML('beforeend', makeMatchCard(m.id, `Match ${idx+1}`, m.t1, m.t2, 'r32'));
+                r32Col.insertAdjacentHTML('beforeend', makeMatchCardUI(m.id, m.t1, m.t2, `Match ${idx+1}`, 'r32'));
                 bracketState.r32[m.id] = { t1: m.t1, t2: m.t2, winner: null };
             });
 
-            const r16Container = document.getElementById('r16-container');
+            const r16Col = document.getElementById('col-r16');
             for(let i=1; i<=8; i++) {
-                r16Container.insertAdjacentHTML('beforeend', makeMatchCard(`r16_${i}`, `R16 Match ${i}`, '—', '—', 'r16'));
+                r16Col.insertAdjacentHTML('beforeend', makeMatchCardUI(`r16_${i}`, '—', '—', `R16 Match ${i}`, 'r16'));
                 bracketState.r16[`r16_${i}`] = { t1: '—', t2: '—', winner: null };
             }
 
-            const qfContainer = document.getElementById('qf-container');
+            const qfCol = document.getElementById('col-qf');
             for(let i=1; i<=4; i++) {
-                qfContainer.insertAdjacentHTML('beforeend', makeMatchCard(`qf_${i}`, `Quarterfinal ${i}`, '—', '—', 'qf'));
+                qfCol.insertAdjacentHTML('beforeend', makeMatchCardUI(`qf_${i}`, '—', '—', `Quarter ${i}`, 'qf'));
                 bracketState.qf[`qf_${i}`] = { t1: '—', t2: '—', winner: null };
             }
 
-            const sfContainer = document.getElementById('sf-container');
+            const sfCol = document.getElementById('col-sf');
             for(let i=1; i<=2; i++) {
-                sfContainer.insertAdjacentHTML('beforeend', makeMatchCard(`sf_${i}`, `Semifinal ${i}`, '—', '—', 'sf'));
+                sfCol.insertAdjacentHTML('beforeend', makeMatchCardUI(`sf_${i}`, '—', '—', `Semi ${i}`, 'sf'));
                 bracketState.sf[`sf_${i}`] = { t1: '—', t2: '—', winner: null };
             }
 
-            document.getElementById('final-container').innerHTML = makeMatchCard('final_1', 'World Cup Final Match', '—', '—', 'final');
+            document.getElementById('col-final').innerHTML = makeMatchCardUI('final_1', '—', '—', 'Grand Championship Match', 'final');
             bracketState.final['final_1'] = { t1: '—', t2: '—', winner: null };
+
+            updateEmailLink();
         }
 
-        // Selection handle logic
         window.pickWinner = function(matchId, pickSlot, stage) {
             const match = bracketState[stage][matchId];
             const chosenTeam = pickSlot === 't1' ? match.t1 : match.t2;
@@ -195,28 +194,27 @@
 
             match.winner = chosenTeam;
 
-            // Highlight chosen row UI
             document.getElementById(`${matchId}-t1-row`).classList.remove('selected');
             document.getElementById(`${matchId}-t2-row`).classList.remove('selected');
             document.getElementById(`${matchId}-${pickSlot}-row`).classList.add('selected');
 
-            // Handle cascading advance
             if (matchId === 'final_1') {
-                document.getElementById('champion-display').innerText = chosenTeam;
+                document.getElementById('champ-crown').innerText = chosenTeam;
+                updateEmailLink();
                 return;
             }
 
             const transition = progressionMap[matchId];
             if (transition) {
-                clearDownstream(transition.target);
+                clearDownstreamTree(transition.target);
                 const nextStage = transition.target.split('_')[0];
                 bracketState[nextStage][transition.target][transition.slot] = chosenTeam;
                 document.getElementById(`${transition.target}-${transition.slot}-name`).innerText = chosenTeam;
             }
+            updateEmailLink();
         }
 
-        // Flush downstream path if pick changes later
-        function clearDownstream(targetId) {
+        function clearDownstreamTree(targetId) {
             let currentTarget = targetId;
             while(currentTarget) {
                 const stage = currentTarget.split('_')[0];
@@ -234,41 +232,60 @@
                     currentTarget = next.target;
                 } else {
                     if (currentTarget === 'final_1') {
-                        document.getElementById('champion-display').innerText = '—';
+                        document.getElementById('champ-crown').innerText = '—';
                     }
                     currentTarget = null;
                 }
             }
         }
 
-        // Export data capture
-        document.getElementById('generate-btn').addEventListener('click', () => {
-            const name = document.getElementById('participant-name').value.trim() || "Anonymous Participant";
-            
-            // Gather structural output summary
-            const exportPayload = {
-                participant: name,
-                roundOf16_Qualifiers: Object.values(bracketState.r16).map(m => [m.t1, m.t2]).flat().filter(t => t !== '—'),
-                quarterfinalists: Object.values(bracketState.qf).map(m => [m.t1, m.t2]).flat().filter(t => t !== '—'),
-                semifinalists: Object.values(bracketState.sf).map(m => [m.t1, m.t2]).flat().filter(t => t !== '—'),
+        function createPayload() {
+            const name = document.getElementById('participant-name').value.trim() || "Anonymous Player";
+            return {
+                player: name,
+                roundOf16: Object.values(bracketState.r16).map(m => [m.t1, m.t2]).flat().filter(t => t !== '—'),
+                quarterfinals: Object.values(bracketState.qf).map(m => [m.t1, m.t2]).flat().filter(t => t !== '—'),
+                semifinals: Object.values(bracketState.sf).map(m => [m.t1, m.t2]).flat().filter(t => t !== '—'),
                 finalists: [bracketState.final.final_1.t1, bracketState.final.final_1.t2].filter(t => t !== '—'),
-                champion: bracketState.final.final_1.winner || "Not selected yet"
+                champion: bracketState.final.final_1.winner || "Not Finalized"
             };
+        }
 
+        function updateEmailLink() {
+            const payload = createPayload();
+            const subject = encodeURIComponent(`2026 World Cup Bracket Selections - ${payload.player}`);
+            const body = encodeURIComponent(
+                `Hi! Here are my updated knockout stage bracket predictions:\n\n` +
+                `Player: ${payload.player}\n` +
+                `-----------------------------------------\n` +
+                `🏆 PREDICTED CHAMPION: ${payload.champion}\n\n` +
+                `⚽ SEMIFINALISTS:\n${payload.semifinals.map(t => `- ${t}`).join('\n')}\n\n` +
+                `⚽ QUARTERFINALISTS:\n${payload.quarterfinals.map(t => `- ${t}`).join('\n')}\n\n` +
+                `📋 FULL RAW DATA:\n${JSON.stringify(payload, null, 2)}`
+            );
+            document.getElementById('email-btn').href = `mailto:?subject=${subject}&body=${body}`;
+        }
+
+        document.getElementById('participant-name').addEventListener('input', updateEmailLink);
+
+        document.getElementById('generate-btn').addEventListener('click', () => {
+            const payload = createPayload();
             const outputBox = document.getElementById('output-box');
             const outputTextarea = document.getElementById('output-json');
             
-            outputTextarea.value = JSON.stringify(exportPayload, null, 2);
+            outputTextarea.value = JSON.stringify(payload, null, 2);
             outputBox.classList.remove('hidden');
             
-            // Auto copy to clipboard
             outputTextarea.select();
-            document.execCommand('copy');
-            alert("Success! Your bracket selections have been generated and automatically copied to your clipboard. Just paste them into our chat window!");
+            try {
+                document.execCommand('copy');
+                alert("Awesome! Your bracket data is generated and successfully copied to your clipboard. Just paste it back into our chat!");
+            } catch (err) {
+                alert("Generated! Copy the data matrix block inside the text box below manually.");
+            }
         });
 
-        // Fire on load
-        init();
+        initTree();
     </script>
 </body>
 </html>
