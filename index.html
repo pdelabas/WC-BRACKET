@@ -29,35 +29,37 @@
 
     <main class="p-4 space-y-8">
         
-        <!-- Profile Identity Metadata -->
-        <div class="max-w-md mx-auto bg-gray-900 p-5 rounded-xl border border-gray-800 shadow-xl">
-            <label for="participant-name" class="block text-xs uppercase font-bold tracking-wider text-gray-400 mb-2">Your Name / Entry Handle:</label>
-            <input type="text" id="participant-name" placeholder="e.g., Oliver" class="w-full bg-gray-950 border border-gray-700 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-emerald-500 font-semibold">
+        <!-- Profile Identity Metadata (Mandatory) -->
+        <div class="max-w-md mx-auto bg-gray-900 p-5 rounded-xl border border-gray-800 shadow-xl" id="profile-container">
+            <label for="participant-name" class="block text-xs uppercase font-bold tracking-wider text-gray-400 mb-2">
+                Your Name / Entry Handle: <span class="text-red-500">*Required</span>
+            </label>
+            <input type="text" id="participant-name" placeholder="Enter your name to unlock submission..." class="w-full bg-gray-950 border border-gray-700 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-emerald-500 font-semibold transition-colors">
         </div>
 
         <!-- Scrollable Bracket Tree Viewport -->
         <div class="overflow-x-auto pb-6">
             <div class="flex gap-8 justify-between items-stretch min-w-[1400px] px-4">
                 
-                <!-- 1. ROUND OF 32 COLUMN (16 Matches) -->
+                <!-- 1. ROUND OF 32 COLUMN -->
                 <div class="bracket-column space-y-3">
                     <h3 class="text-center font-black tracking-widest text-xs uppercase bg-gray-900 py-2 border border-gray-800 text-emerald-400 rounded">Round of 32</h3>
                     <div id="col-r32" class="space-y-4 flex flex-col justify-between h-full"></div>
                 </div>
 
-                <!-- 2. ROUND OF 16 COLUMN (8 Matches) -->
+                <!-- 2. ROUND OF 16 COLUMN -->
                 <div class="bracket-column space-y-3">
                     <h3 class="text-center font-black tracking-widest text-xs uppercase bg-gray-900 py-2 border border-gray-800 text-emerald-400 rounded">Round of 16</h3>
                     <div id="col-r16" class="space-y-8 flex flex-col justify-around h-full"></div>
                 </div>
 
-                <!-- 3. QUARTERFINALS COLUMN (4 Matches) -->
+                <!-- 3. QUARTERFINALS COLUMN -->
                 <div class="bracket-column space-y-3">
                     <h3 class="text-center font-black tracking-widest text-xs uppercase bg-gray-900 py-2 border border-gray-800 text-emerald-400 rounded">Quarterfinals</h3>
                     <div id="col-qf" class="space-y-16 flex flex-col justify-around h-full"></div>
                 </div>
 
-                <!-- 4. SEMIFINALS COLUMN (2 Matches) -->
+                <!-- 4. SEMIFINALS COLUMN -->
                 <div class="bracket-column space-y-3">
                     <h3 class="text-center font-black tracking-widest text-xs uppercase bg-gray-900 py-2 border border-gray-800 text-emerald-400 rounded">Semifinals</h3>
                     <div id="col-sf" class="space-y-24 flex flex-col justify-around h-full"></div>
@@ -81,23 +83,14 @@
             <h4 class="text-sm font-bold uppercase tracking-wider text-gray-300">Submit Your Predictions</h4>
             
             <div class="flex flex-col sm:flex-row gap-3 justify-center">
-                <button id="generate-btn" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-6 py-3 rounded-lg shadow transition-all cursor-pointer text-sm uppercase tracking-wider">
-                    📋 Copy Selection Data
+                <button id="download-btn" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-6 py-3 rounded-lg shadow transition-all cursor-pointer text-sm uppercase tracking-wider flex items-center justify-center gap-2">
+                    💾 Download Selection JSON
                 </button>
-                <a id="email-btn" href="#" class="bg-blue-600 hover:bg-blue-500 text-white font-bold px-6 py-3 rounded-lg shadow transition-all flex items-center justify-center text-sm uppercase tracking-wider">
-                    ✉️ Share via Email
-                </a>
-            </div>
-
-            <div id="output-box" class="hidden space-y-2 pt-2">
-                <p class="text-[11px] text-gray-400">Data automatically saved to clipboard! Copy manually if needed below:</p>
-                <textarea id="output-json" readonly class="w-full h-36 bg-gray-950 border border-gray-800 rounded-lg p-2.5 font-mono text-xs text-emerald-400 focus:outline-none"></textarea>
             </div>
         </section>
     </main>
 
     <script>
-        // All 16 official pairings mapping your exact requested layout sequence
         const initialMatchups = [
             { id: 'm1', t1: '🇩🇪 Germany', t2: '🇵🇾 Paraguay' },
             { id: 'm2', t1: '🇫🇷 France', t2: '🇸🇪 Sweden' },
@@ -117,9 +110,7 @@
             { id: 'm16', t1: '🇨🇴 Colombia', t2: '🇬🇭 Ghana' }
         ];
 
-        // Reconfigured Tree Progression Map tracking all 16 starting nodes down to 1 winner
         const progressionMap = {
-            // Round of 32 -> Round of 16
             'm1': { target: 'r16_1', slot: 't1' }, 'm2': { target: 'r16_1', slot: 't2' },
             'm3': { target: 'r16_2', slot: 't1' }, 'm4': { target: 'r16_2', slot: 't2' },
             'm5': { target: 'r16_3', slot: 't1' }, 'm6': { target: 'r16_3', slot: 't2' },
@@ -129,17 +120,14 @@
             'm13': { target: 'r16_7', slot: 't1' }, 'm14': { target: 'r16_7', slot: 't2' },
             'm15': { target: 'r16_8', slot: 't1' }, 'm16': { target: 'r16_8', slot: 't2' },
 
-            // Round of 16 -> Quarterfinals
             'r16_1': { target: 'qf_1', slot: 't1' }, 'r16_2': { target: 'qf_1', slot: 't2' },
             'r16_3': { target: 'qf_2', slot: 't1' }, 'r16_4': { target: 'qf_2', slot: 't2' },
             'r16_5': { target: 'qf_3', slot: 't1' }, 'r16_6': { target: 'qf_3', slot: 't2' },
             'r16_7': { target: 'qf_4', slot: 't1' }, 'r16_8': { target: 'qf_4', slot: 't2' },
 
-            // Quarterfinals -> Semifinals
             'qf_1': { target: 'sf_1', slot: 't1' }, 'qf_2': { target: 'sf_1', slot: 't2' },
             'qf_3': { target: 'sf_2', slot: 't1' }, 'qf_4': { target: 'sf_2', slot: 't2' },
 
-            // Semifinals -> Grand Final
             'sf_1': { target: 'final_1', slot: 't1' }, 'sf_2': { target: 'final_1', slot: 't2' }
         };
 
@@ -187,8 +175,6 @@
 
             document.getElementById('col-final').innerHTML = makeMatchCardUI('final_1', '—', '—', 'Grand Championship Match', 'final');
             bracketState.final['final_1'] = { t1: '—', t2: '—', winner: null };
-
-            updateEmailLink();
         }
 
         window.pickWinner = function(matchId, pickSlot, stage) {
@@ -205,7 +191,6 @@
 
             if (matchId === 'final_1') {
                 document.getElementById('champ-crown').innerText = chosenTeam;
-                updateEmailLink();
                 return;
             }
 
@@ -216,7 +201,6 @@
                 bracketState[nextStage][transition.target][transition.slot] = chosenTeam;
                 document.getElementById(`${transition.target}-${transition.slot}-name`).innerText = chosenTeam;
             }
-            updateEmailLink();
         }
 
         function clearDownstreamTree(targetId) {
@@ -244,8 +228,7 @@
             }
         }
 
-        function createPayload() {
-            const name = document.getElementById('participant-name').value.trim() || "Anonymous Player";
+        function createPayload(name) {
             return {
                 player: name,
                 roundOf16: Object.values(bracketState.r16).map(m => [m.t1, m.t2]).flat().filter(t => t !== '—'),
@@ -256,35 +239,38 @@
             };
         }
 
-        function updateEmailLink() {
-            const payload = createPayload();
-            const subject = encodeURIComponent(`2026 World Cup Selections - ${payload.player}`);
-            const body = encodeURIComponent(
-                `Here are my tournament predictions:\n\n` +
-                `Player: ${payload.player}\n` +
-                `🏆 CHAMPION PROJECTION: ${payload.champion}\n\n` +
-                `Full Data Payload:\n${JSON.stringify(payload, null, 2)}`
-            );
-            document.getElementById('email-btn').href = `mailto:?subject=${subject}&body=${body}`;
-        }
+        // Handle JSON Download Event with Mandatory Checks
+        document.getElementById('download-btn').addEventListener('click', () => {
+            const nameInput = document.getElementById('participant-name');
+            const name = nameInput.value.trim();
+            const profileBox = document.getElementById('profile-container');
 
-        document.getElementById('participant-name').addEventListener('input', updateEmailLink);
-
-        document.getElementById('generate-btn').addEventListener('click', () => {
-            const payload = createPayload();
-            const outputBox = document.getElementById('output-box');
-            const outputTextarea = document.getElementById('output-json');
-            
-            outputTextarea.value = JSON.stringify(payload, null, 2);
-            outputBox.classList.remove('hidden');
-            
-            outputTextarea.select();
-            try {
-                document.execCommand('copy');
-                alert("Copied directly to your clipboard! Paste it back into our chat window.");
-            } catch (err) {
-                alert("Generated! Copy the data matrix block inside the text box below.");
+            // Validation Guard: Ensure name field is completed
+            if (!name) {
+                alert("🛑 Name Required! Please enter your name at the top of the page before downloading your bracket.");
+                profileBox.classList.remove('border-gray-800');
+                profileBox.classList.add('border-red-500', 'bg-red-950/20');
+                nameInput.focus();
+                return;
             }
+
+            // Reset boundary warnings if valid
+            profileBox.classList.remove('border-red-500', 'bg-red-950/20');
+            profileBox.classList.add('border-gray-800');
+
+            const payload = createPayload(name);
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(payload, null, 2));
+            
+            // Format dynamic filename (e.g., bracket_oliver.json)
+            const sanitizedName = name.toLowerCase().replace(/[^a-z0-9]/g, '_');
+            const downloadAnchor = document.createElement('a');
+            
+            downloadAnchor.setAttribute("href", dataStr);
+            downloadAnchor.setAttribute("download", `bracket_${sanitizedName}.json`);
+            document.body.appendChild(downloadAnchor);
+            
+            downloadAnchor.click();
+            downloadAnchor.remove();
         });
 
         initTree();
